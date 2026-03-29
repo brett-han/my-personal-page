@@ -68,6 +68,24 @@
   animation: fadeIn 0.5s ease-out forwards;
 }
 
+@keyframes pulse {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+
+.skeleton {
+  background: var(--card-hover-bg);
+  animation: pulse 1.5s ease-in-out infinite;
+  border-radius: inherit;
+}
+
 body {
   margin: 0;
   background: var(--bg-primary);

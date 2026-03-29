@@ -1,9 +1,34 @@
+import { useState } from 'react'
 import AnimatedCard from './AnimatedCard'
 import number1 from "../assets/number1.png";
 import number2 from "../assets/number2.png";
 import number3 from "../assets/number3.png";
 import number4 from "../assets/number4.png";
 import number5 from "../assets/number5.png";
+
+function ProjectImage({ src, alt, icon }) {
+  const [loaded, setLoaded] = useState(false)
+
+  return (
+    <div className="project-image relative flex items-center justify-center h-56 rounded bg-gradient-to-br overflow-hidden">
+      {!loaded && src && <div className="absolute inset-0 skeleton" />}
+      {src ? (
+        <img
+          src={src}
+          alt={alt}
+          onLoad={() => setLoaded(true)}
+          className={`w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-[1.3] ${
+            loaded ? 'opacity-100' : 'opacity-0'
+          }`}
+        />
+      ) : (
+        <div className="transition-transform duration-500 ease-out group-hover:scale-[1.3]">
+          {icon}
+        </div>
+      )}
+    </div>
+  )
+}
 
 export default function Portfolio() {
   const projects = [
@@ -118,22 +143,7 @@ export default function Portfolio() {
             const isClickable = !!project.link;
             const cardContent = (
               <>
-                <div
-                  className={`project-image relative flex items-center justify-center h-56 rounded bg-gradient-to-br overflow-hidden`}
-                >
-                  {project.image ? (
-                    <img 
-                      src={project.image} 
-                      alt={project.title} 
-                      loading="lazy" 
-                      className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.3]" 
-                    />
-                  ) : (
-                    <div className="transition-transform duration-500 ease-out group-hover:scale-[1.3]">
-                      {project.icon}
-                    </div>
-                  )}
-                </div>
+                <ProjectImage src={project.image} alt={project.title} icon={project.icon} />
                 <div className="p-6">
                   <p className="text-accent text-xs mb-2 uppercase tracking-wider">{project.category}</p>
                   <h3 className="text-xl font-bold mb-3">{project.title}</h3>

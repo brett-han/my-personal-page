@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 export default function Hero() {
   const [emailCopied, setEmailCopied] = useState(false)
