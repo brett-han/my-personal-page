@@ -40,10 +40,18 @@ jobs:
           # Add server fingerprint to known_hosts automatically
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-      # 6. Deploy build directory to Azure VM using rsync (force overwrite)
-      - name: Deploy build/ to Azure VM
+      # 6. Create the remote destination before syncing the built files
+      - name: Deploy dist/ to server
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          DEPLOY_DIR: ${{ secrets.DEPLOY_DIR }}
         run: |
+          : "${DEPLOY_DIR:?DEPLOY_DIR must be configured}"
+          printf -v remote_dir '%q' "$DEPLOY_DIR"
+          ssh -i ~/.ssh/id_rsa "$SSH_USER@$SSH_HOST" "mkdir -p -- $remote_dir"
+
           rsync -avz --delete \
             -e "ssh -i ~/.ssh/id_rsa" \
             ./dist/ \
-            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_DIR }}
+            "$SSH_USER@$SSH_HOST:$DEPLOY_DIR"
